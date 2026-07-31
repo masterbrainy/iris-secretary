@@ -60,17 +60,21 @@ export default defineConfig([
       ],
       'no-restricted-globals': [
         'error',
-        {
-          name: 'Date',
-          message:
-            'Inject time into the domain instead of reading the clock — it must stay deterministic.',
-        },
         { name: 'fetch', message: 'packages/domain must stay pure — no network access.' },
       ],
+      // Reading the clock is impure; doing arithmetic on a timestamp someone
+      // handed you is not. `new Date(isoString)` is therefore allowed — it is
+      // how an expiry gets computed from an injected issuedAt — while the
+      // zero-argument form and Date.now() stay banned.
       'no-restricted-syntax': [
         'error',
         {
-          selector: "NewExpression[callee.name='Date']",
+          selector: "NewExpression[callee.name='Date'][arguments.length=0]",
+          message:
+            'Inject time into the domain instead of reading the clock — it must stay deterministic. Arithmetic on an injected timestamp, new Date(iso), is fine.',
+        },
+        {
+          selector: "CallExpression[callee.object.name='Date'][callee.property.name='now']",
           message:
             'Inject time into the domain instead of reading the clock — it must stay deterministic.',
         },
