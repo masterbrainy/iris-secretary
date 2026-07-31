@@ -74,3 +74,12 @@ export {
   type RelationshipStatus,
   type Urgency,
 } from './escalation-packet.js';
+export {
+  deriveConversationFollowUpKey,
+  describeDependency,
+  planRecovery,
+  type DependencyKind,
+  type FailureContext,
+  type OperatorAlert,
+  type RecoveryPlan,
+} from './recovery.js';
