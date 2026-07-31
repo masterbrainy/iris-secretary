@@ -1,9 +1,13 @@
 node_modules/
+dist/
+coverage/
+*.tsbuildinfo
 .env
 .env.*
 !.env.example
-dist/
 .turbo/
-coverage/
 .DS_Store
 supabase/.temp/
+
+# Session-local scheduler state, not project config.
+.claude/

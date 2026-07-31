@@ -1,0 +1,33 @@
+packages:
+  - apps/*
+  - packages/*
+  - tests/*
+
+# pnpm 11 reads settings from HERE, not .npmrc (.npmrc is auth/registry/TLS only).
+# Keys are camelCase.
+
+# Defaults to false, which is what we want: every internal dependency must say
+# `workspace:*` explicitly, so nothing silently resolves to a registry package
+# of the same name.
+linkWorkspacePackages: false
+saveWorkspaceProtocol: rolling
+
+# Refuse to run scripts against stale node_modules rather than silently
+# mutating them mid-command.
+verifyDepsBeforeRun: error
+
+# Build-script allowlist. `pnpm approve-builds` regenerates this; it is
+# committed deliberately so CI and a fresh clone agree on what may run
+# install scripts. strictDepBuilds defaults to true and hard-fails otherwise.
+allowBuilds:
+  esbuild: true
+
+# Single source of truth for toolchain versions across every package.
+catalog:
+  '@types/node': ^22.20.1
+  '@vitest/coverage-v8': ^4.1.10
+  eslint: ^10.8.0
+  prettier: ^3.9.6
+  typescript: ~6.0.3
+  typescript-eslint: ^8.65.0
+  vitest: ^4.1.10
