@@ -57,3 +57,20 @@ export {
   type ResolutionRequest,
   type SensitiveCategory,
 } from './policy.js';
+export {
+  MAX_CONTEXT_WORDS,
+  assessPriority,
+  buildEscalationPacket,
+  clampContext,
+  type CallerSummary,
+  type EscalationPacket,
+  type FounderAction,
+  type PacketInput,
+  type PacketRejectionReason,
+  type PacketResult,
+  type Priority,
+  type PriorityAssessment,
+  type PrioritySignals,
+  type RelationshipStatus,
+  type Urgency,
+} from './escalation-packet.js';
