@@ -9,7 +9,7 @@
  *
  * The second is where the safety lives. Scope and approval are applied *before*
  * an answer is composed, not merely subtracted from the reported source list —
- * otherwise a customer-specific entry could shape the words Cynthia says while
+ * otherwise a customer-specific entry could shape the words Iris says while
  * being invisible in the audit trail, which is the worst of both.
  *
  * Pure and deterministic: ranking is lexical and computed over the candidate

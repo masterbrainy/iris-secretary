@@ -2,7 +2,7 @@
  * Dependency-failure recovery.
  *
  * CLAUDE.md: "Any dependency failure (a1mobile, the AI service, Supabase
- * Realtime, the glasses integration) returns Cynthia to a safe state, captures
+ * Realtime, the glasses integration) returns Iris to a safe state, captures
  * callback info, creates a follow-up where possible, and alerts the
  * founder/operator. The client is never left in unexplained silence."
  *

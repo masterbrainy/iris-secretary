@@ -54,7 +54,7 @@ Researched 2026-07-31 against the live web, then independently re-verified by a 
 
 ### 2.2 a1mobile is a competitor-shaped product, not a substrate
 
-This deserves the founder's attention before any commercial dependency is assumed. a1mobile's own pitch — an AI receptionist bound to a business number that answers, schedules and follows up — **is the same product surface as Cynthia's routine-answer path**. Building Cynthia's entry point on a1mobile means routing the core value proposition through a vendor selling the same thing. Whether the founder has an actual account/relationship with a1mobile, or whether "a1mobile" in the PRD is an aspiration, is an open question logged in NEEDS-USER.md.
+This deserves the founder's attention before any commercial dependency is assumed. a1mobile's own pitch — an AI receptionist bound to a business number that answers, schedules and follows up — **is the same product surface as Iris's routine-answer path**. Building Iris's entry point on a1mobile means routing the core value proposition through a vendor selling the same thing. Whether the founder has an actual account/relationship with a1mobile, or whether "a1mobile" in the PRD is an aspiration, is an open question logged in NEEDS-USER.md.
 
 ### 2.3 The undocumented internal API is intelligence, not an integration target
 
@@ -70,7 +70,7 @@ The adapter contract will be specified against the **union of two fully, publicl
 
 Design consequences already settled (see DECISIONS-LOG.md):
 
-- **Model the domain on the async command/webhook shape (Telnyx-style), not the synchronous TwiML request-response shape.** Cynthia's core flow — hold the client, ask the founder through the glasses, return with an answer — is inherently asynchronous and multi-turn. If TwiML's request-response shape leaks into the domain layer, the hold-and-relay flow fights the abstraction. A TwiML-shaped adapter can translate downward (`hold` → `<Enqueue>`, `resume` → REST update / `<Leave>`).
+- **Model the domain on the async command/webhook shape (Telnyx-style), not the synchronous TwiML request-response shape.** Iris's core flow — hold the client, ask the founder through the glasses, return with an answer — is inherently asynchronous and multi-turn. If TwiML's request-response shape leaks into the domain layer, the hold-and-relay flow fights the abstraction. A TwiML-shaped adapter can translate downward (`hold` → `<Enqueue>`, `resume` → REST update / `<Leave>`).
 - **Webhook verification is adapter-level and provider-specific** (Twilio: HMAC-SHA1 over URL + sorted params in `X-Twilio-Signature`; Telnyx: Ed25519 over timestamp+body). The contract exposes `verifyWebhook(rawBody, headers) -> Result<VerifiedEvent>`; the a1mobile implementation is `pending`; the simulator emits a deterministic signature so the dedupe/idempotency code path is genuinely exercised in tests.
 - **Idempotency keys derive from the provider event ID, not payload content** (Twilio `CallSid`/`MessageSid`, Telnyx event `id`). Since a1mobile's field name is unknown, the envelope carries `providerEventId` as an opaque string extracted by a per-provider mapper, so a provider swap doesn't invalidate stored keys.
 
@@ -95,7 +95,7 @@ Desk research 2026-07-31, adversarially verified. The full spike document (roadm
 
 1. **No cloud-to-glasses push.** DAT is exclusively a mobile SDK; there is no server-side API. Any escalation must travel: server → push/socket → companion phone app → Bluetooth → glasses.
 2. **Total phone dependency.** The glasses pair to the phone; the Meta AI app brokers registration and permissions; sessions stop when Meta-AI-app-to-glasses connectivity drops.
-3. **No Meta AI / "Hey Meta" access, no custom wake word.** Verbatim: accessing Meta AI capabilities "including voice commands, isn't part of our initial developer preview." Voice invocation is listed as still under development. **The founder cannot say "Hey Cynthia" to the glasses.** Interaction is app-initiated with a short prompted reply window — never ambient listening.
+3. **No Meta AI / "Hey Meta" access, no custom wake word.** Verbatim: accessing Meta AI capabilities "including voice commands, isn't part of our initial developer preview." Voice invocation is listed as still under development. **The founder cannot say "Hey Iris" to the glasses.** Interaction is app-initiated with a short prompted reply window — never ambient listening.
 4. **Cannot ship publicly yet.** "Publishing is currently not available during the Developer Preview phase"; only select partners can publish, GA "anticipated in 2026." Distribution today is Developer Mode (enable by tapping the Meta AI app version number five times) plus invite-only release channels for up to 100 testers. Adequate for a single-founder MVP; not a public-launch path.
 5. **No documented latency figures at all.** Meta publishes none. End-to-end latency will be dominated by push delivery + TTS + the HFP route switch — measurable only with real hardware.
 6. **Pre-1.0 SDK with monthly breaking releases**, coupled to specific Meta AI app and firmware versions. Pin versions; expect churn.
@@ -112,11 +112,11 @@ Mitigation, which the PRD already mandates: the founder web inbox and mobile pus
 
 Full detail in [meta-wearable-spike.md](meta-wearable-spike.md). Load-bearing amendments to §3.1–3.2:
 
-- **DAT exposes no audio API whatsoever** — no `play()`, no `startMicrophone()`, no audio type. Camera, display, and session management only. Meta's guidance is to use `AVAudioPlayer`/`AVSpeechSynthesizer`/`AudioManager`. Since Cynthia's escalation flow is **audio-only**, the glasses leg is a Bluetooth-headset problem, not a Meta-toolkit problem — the risk moves off the preview SDK onto platform audio policy.
-- **Whether audio needs a DAT session at all is undocumented in both directions.** If it doesn't, DAT leaves Cynthia's critical path entirely (spike §7). Decisive experiment E1.
+- **DAT exposes no audio API whatsoever** — no `play()`, no `startMicrophone()`, no audio type. Camera, display, and session management only. Meta's guidance is to use `AVAudioPlayer`/`AVSpeechSynthesizer`/`AudioManager`. Since Iris's escalation flow is **audio-only**, the glasses leg is a Bluetooth-headset problem, not a Meta-toolkit problem — the risk moves off the preview SDK onto platform audio policy.
+- **Whether audio needs a DAT session at all is undocumented in both directions.** If it doesn't, DAT leaves Iris's critical path entirely (spike §7). Decisive experiment E1.
 - **iOS cannot ship publicly at all today**: "Publishing to the App Store is not currently supported… App Store rejection due to Apple's MFi program and privacy manifest requirements." Android Play Store status is **undocumented** — mark unknown, don't assume. This arguably outranks the background question as a launch risk.
 - **The real critical path is access, not hardware**: org registration, per-platform project registration, and a **Meta permission-justification review with no published SLA**. iOS and Android must be registered as separate applications; no dash in the iOS Bundle ID.
-- **MockDeviceKit is substantial** — simulates registration, permissions, pairing, power, don/doff, fold, cap-touch, camera — and runs in CI with no hardware. **But it documents no audio path**, so the one capability Cynthia needs is likely hardware-only.
+- **MockDeviceKit is substantial** — simulates registration, permissions, pairing, power, don/doff, fold, cap-touch, camera — and runs in CI with no hardware. **But it documents no audio path**, so the one capability Iris needs is likely hardware-only.
 - Correction to §3.1: the docs say only "microphones"; the **"5-mic array" is hardware marketing, not a DAT spec**. Also, the FAQ's motion/orientation/GPS answer describes Web Apps on Display glasses, **not** DAT.
 - No battery API, no wear-state read, and no transition reason on state change. Wear detection is a user setting the app **cannot read**, so "doffed" and "still worn" are indistinguishable when it's off.
 

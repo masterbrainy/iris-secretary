@@ -1,4 +1,4 @@
-import { assertNever } from '@cynthia/domain';
+import { assertNever } from '@iris/domain';
 
 /**
  * Every provider capability carries one of these, and the founder console

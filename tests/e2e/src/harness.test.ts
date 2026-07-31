@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { assertNever } from '@cynthia/domain';
-import { describeCapability } from '@cynthia/adapters';
+import { assertNever } from '@iris/domain';
+import { describeCapability } from '@iris/adapters';
 
 /**
  * Placeholder e2e suite. The real scenario gates (direct answer, clarification,

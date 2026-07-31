@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { createA1MobileSimulator, type A1MobileSimulator } from '@cynthia/adapters';
+import { createA1MobileSimulator, type A1MobileSimulator } from '@iris/adapters';
 import { createInMemoryPorts, type InMemoryPorts } from './in-memory.js';
 import { conversationEventFor, createOrchestrator, type Orchestrator } from './orchestrator.js';
 

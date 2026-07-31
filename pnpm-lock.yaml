@@ -264,22 +264,22 @@ importers:
 
   apps/api:
     dependencies:
-      '@cynthia/adapters':
+      '@iris/adapters':
         specifier: workspace:*
         version: link:../../packages/adapters
-      '@cynthia/domain':
+      '@iris/domain':
         specifier: workspace:*
         version: link:../../packages/domain
 
   apps/web:
     dependencies:
-      '@cynthia/adapters':
+      '@iris/adapters':
         specifier: workspace:*
         version: link:../../packages/adapters
 
   packages/adapters:
     dependencies:
-      '@cynthia/domain':
+      '@iris/domain':
         specifier: workspace:*
         version: link:../domain
 
@@ -287,10 +287,10 @@ importers:
 
   tests/e2e:
     dependencies:
-      '@cynthia/adapters':
+      '@iris/adapters':
         specifier: workspace:*
         version: link:../../packages/adapters
-      '@cynthia/domain':
+      '@iris/domain':
         specifier: workspace:*
         version: link:../../packages/domain
 

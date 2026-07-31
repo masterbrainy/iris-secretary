@@ -1,6 +1,6 @@
-# Cynthia
+# Iris
 
-A live AI executive secretary. Cynthia answers a founder's business calls and texts, resolves routine requests from an approved knowledge base, and — when it can't safely answer — keeps the client on hold, asks the founder a focused question through their Ray-Ban Meta glasses, and relays the answer back. Every founder answer becomes a proposed knowledge entry, so the same question escalates once and not twice.
+A live AI executive secretary. Iris answers a founder's business calls and texts, resolves routine requests from an approved knowledge base, and — when it can't safely answer — keeps the client on hold, asks the founder a focused question through their Ray-Ban Meta glasses, and relays the answer back. Every founder answer becomes a proposed knowledge entry, so the same question escalates once and not twice.
 
 Requirements and the demo script live in [docs/PRD.md](docs/PRD.md). Architecture invariants and the rules this codebase is held to live in [CLAUDE.md](CLAUDE.md).
 
@@ -62,4 +62,4 @@ docs/             PRD, architecture, spike, roadmap, decisions
 
 **TypeScript is pinned to 6.0.3, not 7.x.** TypeScript 7 (the Go port) is out and much faster, but `typescript-eslint@8` declares a peer of `typescript >=4.8.4 <6.1.0` and aborts on TS 7, which would silently cost us all type-aware linting. Revisit when TS 7.1 ships the stable compiler API.
 
-**Workspace packages resolve to source during development.** Each package exports a `cynthia:source` condition pointing at `src/`, so tests and typechecking read TypeScript directly with no build step, while plain Node gets the built `dist/`. Vitest is configured to discover tests only under `src/`, because a stale `dist/` copy passing while source is broken is worse than a slow run.
+**Workspace packages resolve to source during development.** Each package exports a `iris:source` condition pointing at `src/`, so tests and typechecking read TypeScript directly with no build step, while plain Node gets the built `dist/`. Vitest is configured to discover tests only under `src/`, because a stale `dist/` copy passing while source is broken is worse than a slow run.

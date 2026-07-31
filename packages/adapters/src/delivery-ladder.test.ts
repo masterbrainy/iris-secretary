@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { planRecovery } from '@cynthia/domain';
+import { planRecovery } from '@iris/domain';
 import { cancelAcrossLadder, deliverViaLadder, rungIdempotencyKey } from './delivery-ladder.js';
 import { createMetaWearableSimulator } from './meta-wearable/simulator.js';
 import { createA1MobileSimulator } from './a1mobile/simulator.js';

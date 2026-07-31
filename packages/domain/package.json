@@ -1,11 +1,11 @@
 {
-  "name": "@cynthia/domain",
+  "name": "@iris/domain",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "exports": {
     ".": {
-      "cynthia:source": "./src/index.ts",
+      "iris:source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },

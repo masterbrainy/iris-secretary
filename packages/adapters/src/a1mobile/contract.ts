@@ -11,12 +11,12 @@
  * inventing a provider endpoint, which CLAUDE.md forbids outright.
  *
  * The shape is the async command/webhook model (Telnyx-style), not the
- * synchronous TwiML request-response model. Cynthia's core flow — hold the
+ * synchronous TwiML request-response model. Iris's core flow — hold the
  * client, ask the founder, come back with an answer — is inherently
  * asynchronous and multi-turn, and a request-response shape would fight it.
  */
 
-import type { EnvelopeInput, RawEventRef } from '@cynthia/domain';
+import type { EnvelopeInput, RawEventRef } from '@iris/domain';
 import type { CapabilityRegistry } from '../capability.js';
 
 /** Every capability starts pending. Nothing here is backed by a live provider. */
@@ -121,7 +121,7 @@ export type VerificationResult =
 /**
  * Who authorised this side effect. CLAUDE.md requires every side effect to
  * carry authorization, and the audit timeline has to be able to answer
- * "why did Cynthia send that?" months later.
+ * "why did Iris send that?" months later.
  */
 export interface Authorization {
   readonly grantedBy: 'policy' | 'founder' | 'operator';
@@ -187,7 +187,7 @@ export interface GatherInput {
 export interface TransferInput {
   readonly callId: string;
   readonly to: string;
-  /** Warm keeps Cynthia on the line to introduce; blind hands straight over. */
+  /** Warm keeps Iris on the line to introduce; blind hands straight over. */
   readonly mode: 'warm' | 'blind';
 }
 
@@ -206,7 +206,7 @@ export interface A1MobileAdapter {
   answerCall(callId: string, context: CommandContext): Promise<CommandResult<CommandAck>>;
   speak(input: SpeakInput, context: CommandContext): Promise<CommandResult<CommandAck>>;
   gather(input: GatherInput, context: CommandContext): Promise<CommandResult<CommandAck>>;
-  /** Places the client on hold while Cynthia asks the founder. */
+  /** Places the client on hold while Iris asks the founder. */
   hold(callId: string, context: CommandContext): Promise<CommandResult<CommandAck>>;
   resume(callId: string, context: CommandContext): Promise<CommandResult<CommandAck>>;
   transferCall(input: TransferInput, context: CommandContext): Promise<CommandResult<CommandAck>>;

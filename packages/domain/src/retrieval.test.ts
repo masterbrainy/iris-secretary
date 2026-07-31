@@ -109,7 +109,7 @@ describe('scope is applied before the answer is composed', () => {
     const outcome = selectAnswer('what is our price per unit', [...BASE, PRICING_FOR_ACME], globex);
 
     // The critical assertion is about the TEXT, not just the source ids: a
-    // scoped entry must not shape the words Cynthia says.
+    // scoped entry must not shape the words Iris says.
     expect(outcome.answer ?? '').not.toContain('42');
     expect(outcome.sourceIds).not.toContain('k-acme-price');
     expect(outcome.excluded.map((e) => e.item.knowledgeItemId)).toContain('k-acme-price');

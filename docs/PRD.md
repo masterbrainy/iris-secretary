@@ -1,30 +1,30 @@
-# CYNTHIA — MVP PRODUCT REQUIREMENTS DOCUMENT
+# IRIS — MVP PRODUCT REQUIREMENTS DOCUMENT
 
 Build prompt for Claude Fable 5
 
 ## ROLE
 
-Act as the lead product engineer for Cynthia, a live AI executive secretary. Build a working MVP, not a presentation or a collection of mock screens. The code must integrate a1mobile, Supabase, and Ray-Ban Meta Wayfarer (Gen 2) glasses. Where production credentials or documented capabilities are unavailable, preserve the integration boundary and supply a deterministic simulator. Do not invent undocumented provider endpoints or bypass platform restrictions.
+Act as the lead product engineer for Iris, a live AI executive secretary. Build a working MVP, not a presentation or a collection of mock screens. The code must integrate a1mobile, Supabase, and Ray-Ban Meta Wayfarer (Gen 2) glasses. Where production credentials or documented capabilities are unavailable, preserve the integration boundary and supply a deterministic simulator. Do not invent undocumented provider endpoints or bypass platform restrictions.
 
 ## PRODUCT GOAL
 
-Cynthia receives the founder's business calls and messages through a1mobile. It answers routine requests from an approved knowledge base and approved tools. If the answer requires missing information or founder judgment, Cynthia keeps ownership of the client conversation, briefly places the client on hold, asks the founder through the Meta glasses, receives a short verbal response, and immediately relays that answer to the client. The founder should not need to open a phone or join the full call.
+Iris receives the founder's business calls and messages through a1mobile. It answers routine requests from an approved knowledge base and approved tools. If the answer requires missing information or founder judgment, Iris keeps ownership of the client conversation, briefly places the client on hold, asks the founder through the Meta glasses, receives a short verbal response, and immediately relays that answer to the client. The founder should not need to open a phone or join the full call.
 
-After each interaction, Cynthia creates a concise summary and turns any new founder answer into a proposed knowledge-base entry. Reusing that entry in future conversations should reduce repeated escalations.
+After each interaction, Iris creates a concise summary and turns any new founder answer into a proposed knowledge-base entry. Reusing that entry in future conversations should reduce repeated escalations.
 
 ## PRIMARY EXPERIENCE
 
 1. A client calls or texts the founder's a1mobile business number.
-2. Cynthia identifies the caller when possible and determines the caller's intent.
-3. Cynthia searches the approved knowledge base and may use allow-listed tools such as scheduling.
-4. If the request is unclear, Cynthia asks one focused clarification question.
-5. If Cynthia has a supported, policy-safe answer, it responds directly.
-6. If confidence is low or human judgment is required, Cynthia says a short hold phrase such as, "Let me check with my boss."
-7. Cynthia sends the founder an escalation packet through the Ray-Ban Meta Wayfarer Gen 2 integration. The packet contains the caller, organization, relationship status, exact question, short context, priority reasons, and allowed actions.
+2. Iris identifies the caller when possible and determines the caller's intent.
+3. Iris searches the approved knowledge base and may use allow-listed tools such as scheduling.
+4. If the request is unclear, Iris asks one focused clarification question.
+5. If Iris has a supported, policy-safe answer, it responds directly.
+6. If confidence is low or human judgment is required, Iris says a short hold phrase such as, "Let me check with my boss."
+7. Iris sends the founder an escalation packet through the Ray-Ban Meta Wayfarer Gen 2 integration. The packet contains the caller, organization, relationship status, exact question, short context, priority reasons, and allowed actions.
 8. The founder can answer verbally, decline, defer, or accept a direct handoff.
-9. If the founder answers, Cynthia policy-checks the response and relays it to the client in the active conversation.
-10. If the founder is unavailable, Cynthia returns to the client, captures a message, creates a follow-up, and gives an honest next step.
-11. Cynthia saves the transcript, outcome, commitments, summary, audit timeline, and a proposed knowledge entry.
+9. If the founder answers, Iris policy-checks the response and relays it to the client in the active conversation.
+10. If the founder is unavailable, Iris returns to the client, captures a message, creates a follow-up, and gives an honest next step.
+11. Iris saves the transcript, outcome, commitments, summary, audit timeline, and a proposed knowledge entry.
 
 ## MVP SCOPE
 
@@ -34,7 +34,7 @@ The MVP must support inbound calls, inbound and outbound SMS, approved knowledge
 
 a1mobile is the system of entry for the business phone number, calls, messages, contact context, and call routing.
 
-Create an A1MobileAdapter with typed interfaces for inbound call/SMS events, verified webhooks, call and message metadata, transcripts or audio references when available, SMS replies, Cynthia's voice response, hold behavior, explicit call transfer, clean termination, and duplicate or out-of-order event handling.
+Create an A1MobileAdapter with typed interfaces for inbound call/SMS events, verified webhooks, call and message metadata, transcripts or audio references when available, SMS replies, Iris's voice response, hold behavior, explicit call transfer, clean termination, and duplicate or out-of-order event handling.
 
 Use only official a1mobile APIs, webhooks, SDKs, or supported integrations. First inspect the credentials and documentation supplied in the project. If a required capability is not documented or exposed, do not guess an endpoint. Implement the production adapter contract, mark the capability as pending, and provide an A1MobileSimulator that emits the same domain events for local development and automated tests.
 
@@ -59,7 +59,7 @@ All tenant-owned tables must enforce organization_id through Row Level Security.
 
 Create a MetaWearableAdapter using the currently available official Meta Wearables Device Access Toolkit and the companion mobile application where required. The product must target Ray-Ban Meta Wayfarer (Gen 2), not the display glasses.
 
-The desired glasses flow is: Cynthia speaks the caller and question; the founder answers, defers, declines, or requests the call; the response returns with its escalation ID; Cynthia relays it to the client.
+The desired glasses flow is: Iris speaks the caller and question; the founder answers, defers, declines, or requests the call; the response returns with its escalation ID; Iris relays it to the client.
 
 Begin with a time-boxed spike. Verify device authentication, background delivery, audio playback, voice capture, latency, offline behavior, phone dependency, permissions, and review requirements. Record results in docs/meta-wearable-spike.md.
 
@@ -113,11 +113,11 @@ Build a client simulator that can run the full experience locally without paid s
 
 Provide configurable recording/transcription disclosure without claiming universal legal compliance. Minimize audio storage and separate retention for recordings, transcripts, summaries, knowledge, and audits. Redact secrets and unnecessary personal data. Confirm critical names, dates, prices, and commitments when transcription is uncertain. All side effects need typed inputs, authorization, timeouts, and idempotency.
 
-If a1mobile, the AI service, Supabase Realtime, or the glasses integration fails, Cynthia must return to a safe state, capture callback information, create a follow-up when possible, and alert the founder or operator. The client must never be left in unexplained silence.
+If a1mobile, the AI service, Supabase Realtime, or the glasses integration fails, Iris must return to a safe state, capture callback information, create a follow-up when possible, and alert the founder or operator. The client must never be left in unexplained silence.
 
 ## SUCCESS TARGETS
 
-- Cynthia acknowledges a connected client within 1.5 seconds as a target.
+- Iris acknowledges a connected client within 1.5 seconds as a target.
 - The founder prompt is created within 3 seconds of the escalation decision as a target.
 - A submitted founder answer is relayed within 1 second as a target.
 - Routine seeded questions are completed without founder involvement.

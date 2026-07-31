@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createEnvelope, decideIngest, deriveSideEffectKey } from '@cynthia/domain';
+import { createEnvelope, decideIngest, deriveSideEffectKey } from '@iris/domain';
 import { createA1MobileSimulator } from './simulator.js';
 import { createA1MobileProductionAdapter } from './production.js';
 import { A1MOBILE_CAPABILITIES, type CommandContext } from './contract.js';
