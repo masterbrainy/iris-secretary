@@ -10,28 +10,28 @@ Last updated: 2026-07-31 (bootstrap pass).
 
 Inventory taken 2026-07-31, before any code was written.
 
-| Thing | Status |
-| --- | --- |
-| Source code | **None.** Repo contained only `CLAUDE.md` and `docs/PRD.md`. |
-| Credentials of any kind | **None.** No `.env`, `.env.example`, `*.pem`, `*.key`, or `credentials*` file anywhere in the tree. |
-| a1mobile SDK, docs, or API keys | **None.** |
-| Supabase project ref, URL, or keys | **None.** |
-| Meta developer credentials / Application ID | **None.** |
-| Git | Was not a repo. Initialised locally on `main` during bootstrap; no remote configured. |
+| Thing                                       | Status                                                                                              |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Source code                                 | **None.** Repo contained only `CLAUDE.md` and `docs/PRD.md`.                                        |
+| Credentials of any kind                     | **None.** No `.env`, `.env.example`, `*.pem`, `*.key`, or `credentials*` file anywhere in the tree. |
+| a1mobile SDK, docs, or API keys             | **None.**                                                                                           |
+| Supabase project ref, URL, or keys          | **None.**                                                                                           |
+| Meta developer credentials / Application ID | **None.**                                                                                           |
+| Git                                         | Was not a repo. Initialised locally on `main` during bootstrap; no remote configured.               |
 
 Local toolchain observed on the dev machine:
 
-| Tool | Status |
-| --- | --- |
-| Node | v22.15.0 ✅ |
-| npm | 10.9.2 ✅ |
-| corepack | 0.32.0 ✅ (pnpm available through it) |
-| pnpm | not installed standalone (corepack will provide) |
-| Homebrew | 6.0.13 ✅ |
-| Supabase CLI | **not installed** — will be pinned as a repo devDependency |
-| Docker / container runtime | **not installed** — blocks `supabase start` (Phase 3), blocks nothing before it |
-| Xcode | **not installed** (Command Line Tools only) — blocks any native iOS companion-app build |
-| GitHub CLI | authenticated as `masterbrainy`; no repo created (see NEEDS-USER.md) |
+| Tool                       | Status                                                                                  |
+| -------------------------- | --------------------------------------------------------------------------------------- |
+| Node                       | v22.15.0 ✅                                                                             |
+| npm                        | 10.9.2 ✅                                                                               |
+| corepack                   | 0.32.0 ✅ (pnpm available through it)                                                   |
+| pnpm                       | not installed standalone (corepack will provide)                                        |
+| Homebrew                   | 6.0.13 ✅                                                                               |
+| Supabase CLI               | **not installed** — will be pinned as a repo devDependency                              |
+| Docker / container runtime | **not installed** — blocks `supabase start` (Phase 3), blocks nothing before it         |
+| Xcode                      | **not installed** (Command Line Tools only) — blocks any native iOS companion-app build |
+| GitHub CLI                 | authenticated as `masterbrainy`; no repo created (see NEEDS-USER.md)                    |
 
 **Consequence:** every provider capability in this codebase starts life as `pending` with a simulator behind it. That is not a shortcut — it is the only honest state given the inventory above, and it is exactly what CLAUDE.md prescribes.
 
@@ -62,7 +62,7 @@ The research pass discovered — from a1mobile's own publicly-served dashboard J
 
 **Standing decision: this codebase will not call those endpoints.** They are undocumented, auth-gated, carry no contractual stability, and using them would violate both CLAUDE.md's rule against undocumented provider endpoints and, near-certainly, a1mobile's terms. They are recorded here as evidence about what the company's product does — nothing more. No endpoint list is reproduced in this repo's source.
 
-*Process note, recorded for honesty:* the research agent, in establishing the above, issued unauthenticated HTTP requests to `api.a1mobile.com` (which returned 401/404/405 auth challenges). That went further than probing public documentation and will not be repeated; all further a1mobile questions get answered by asking a1mobile, not by probing them.
+_Process note, recorded for honesty:_ the research agent, in establishing the above, issued unauthenticated HTTP requests to `api.a1mobile.com` (which returned 401/404/405 auth challenges). That went further than probing public documentation and will not be repeated; all further a1mobile questions get answered by asking a1mobile, not by probing them.
 
 ### 2.4 Consequence for the A1MobileAdapter
 
@@ -83,12 +83,12 @@ Desk research 2026-07-31, adversarially verified. The full spike document (roadm
 ### 3.1 What is confirmed
 
 - **The toolkit is real and official**: "Meta Wearables Device Access Toolkit" (DAT), at https://wearables.developer.meta.com. Still **Developer Preview, not GA** — both official GitHub READMEs state "The Wearables Device Access Toolkit is in developer preview." Current SDK **0.8.0, dated 2026-06-25**.
-- **Ray-Ban Meta Gen 2 is supported.** The official FAQ lists "Ray-Ban Meta (Gen 1 and Gen 2), Ray-Ban Meta Display, Oakley Meta HSTN, Oakley Meta Vanguard." *Wayfarer* is a frame style, not a separate support tier — support is at the Gen 2 product level. DAT 0.8.0 requires Meta AI app V272 and glasses firmware V127.
+- **Ray-Ban Meta Gen 2 is supported.** The official FAQ lists "Ray-Ban Meta (Gen 1 and Gen 2), Ray-Ban Meta Display, Oakley Meta HSTN, Oakley Meta Vanguard." _Wayfarer_ is a frame style, not a separate support tier — support is at the Gen 2 product level. DAT 0.8.0 requires Meta AI app V272 and glasses firmware V127.
 - **Native iOS and Android SDKs only.** iOS 15.2+/Xcode 14+ via SPM; Android 10+ via GitHub Packages (needs a `read:packages` token plus an Application ID from the Wearables Developer Center). **No React Native support is documented.** A community Flutter bridge exists but is third-party.
 - **Audio rides standard Bluetooth profiles, not a proprietary pipe.** A2DP for playback (44.1/48 kHz stereo); HFP for bidirectional audio with beamformed mic capture at **8 kHz mono**. iOS uses `AVAudioSession` (`.playback`; `.playAndRecord` + `.allowBluetoothHFP` + an `AVAudioEngine` input tap), Android uses `AudioManager.setCommunicationDevice(TYPE_BLUETOOTH_SCO)`.
 - **A2DP and HFP are mutually exclusive.** Verbatim from the docs: activating HFP "switches the glasses away from A2DP, and audio output quality drops to 8 kHz mono for the duration of the session." iOS sample code waits ~2 seconds for the route to stabilise.
 - **Session model**: one-time registration by deep-link into the Meta AI app; camera permission via a Meta AI deeplink, mic permission via normal platform dialogs; revocable from Meta AI's "App Connections." **Only one DAT session per device at a time.** States STARTED/PAUSED/STOPPED. **Closing the hinges forces STOPPED, and reopening does not restart the session** — the app must start a new one.
-- **iOS background modes are officially documented** (this corrects an initial research claim that they weren't): the official iOS integration guide specifies `UIBackgroundModes` with `bluetooth-peripheral` and `external-accessory`. Changelogs confirm streaming *continues* in background from v0.2.1, with HEVC background streaming from v0.5.0. The Android guide contains **no** foreground-service guidance.
+- **iOS background modes are officially documented** (this corrects an initial research claim that they weren't): the official iOS integration guide specifies `UIBackgroundModes` with `bluetooth-peripheral` and `external-accessory`. Changelogs confirm streaming _continues_ in background from v0.2.1, with HEVC background streaming from v0.5.0. The Android guide contains **no** foreground-service guidance.
 - **A Mock Device Kit ships with the SDK** for testing without hardware (simulate device state, permissions, media streaming). Does not cover display glasses.
 
 ### 3.2 Hard limits the product must design around
@@ -102,7 +102,7 @@ Desk research 2026-07-31, adversarially verified. The full spike document (roadm
 
 ### 3.3 The most important open risk
 
-**Background *initiation* is unproven, and on iOS it is close to disproven.** Docs and changelogs establish that streams *continue* when the app is backgrounded; nothing documents waking a backgrounded app to *start* audio. Deeper research (spike §1.3) found three independent iOS blockers — silent push is throttled and non-guaranteed, `AVAudioSession.ErrorCode.cannotInterruptOthers` is defined as exactly this failure for nonmixable sessions, and PushKit requires CallKit. Android by contrast has a complete documented path (high-priority FCM → foreground-service background-start exemption → `connectedDevice`/`mediaPlayback` → A2DP).
+**Background _initiation_ is unproven, and on iOS it is close to disproven.** Docs and changelogs establish that streams _continue_ when the app is backgrounded; nothing documents waking a backgrounded app to _start_ audio. Deeper research (spike §1.3) found three independent iOS blockers — silent push is throttled and non-guaranteed, `AVAudioSession.ErrorCode.cannotInterruptOthers` is defined as exactly this failure for nonmixable sessions, and PushKit requires CallKit. Android by contrast has a complete documented path (high-priority FCM → foreground-service background-start exemption → `connectedDevice`/`mediaPlayback` → A2DP).
 
 **Verdict: PENDING on Android, effectively UNSUPPORTED-as-designed on iOS** — iOS hands-free requires a pre-joined PushToTalk channel or a founder tap.
 

@@ -1,0 +1,9 @@
+dist/
+coverage/
+pnpm-lock.yaml
+supabase/.temp/
+
+# Authored source-of-truth specs. Left exactly as written so re-pasting an
+# updated version never produces formatter churn.
+CLAUDE.md
+docs/PRD.md

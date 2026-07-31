@@ -10,7 +10,7 @@ This is the **desk portion**. Every finding below comes from official Meta, Appl
 
 **Nothing here was verified on hardware.** There is no Meta developer account, no Wearables Application ID, and no physical glasses available to this project (see NEEDS-USER.md §3). Where a question can only be answered by experiment, it is marked **UNVERIFIED** and appears in §8 with the experiment that would settle it. No capability is claimed to work on the strength of documentation alone.
 
-**Spot-check performed.** The four claims this document leans on hardest were re-fetched directly from Meta's docs and confirmed verbatim: the "use `AVAudioPlayer`, `AVSpeechSynthesizer`, or any standard audio API" guidance, the A2DP/HFP mutual-exclusion sentence, the App Store rejection statement, and the *absence* of any sentence making a DAT session a prerequisite for audio. One additional detail surfaced during that check and is recorded in §3.
+**Spot-check performed.** The four claims this document leans on hardest were re-fetched directly from Meta's docs and confirmed verbatim: the "use `AVAudioPlayer`, `AVSpeechSynthesizer`, or any standard audio API" guidance, the A2DP/HFP mutual-exclusion sentence, the App Store rejection statement, and the _absence_ of any sentence making a DAT session a prerequisite for audio. One additional detail surfaced during that check and is recorded in §3.
 
 ---
 
@@ -33,7 +33,7 @@ Audio to and from the glasses is **ordinary Bluetooth**: A2DP out, HFP bidirecti
 
 ### 1.2 Whether audio needs a DAT session at all is genuinely unknown
 
-The docs never state, in either direction, whether a DAT `DeviceSession` must be started for A2DP playback or HFP capture to work. The only sentence linking the two is an ordering constraint explicitly scoped to *"When using HFP with a DAT camera stream."* It does not say audio requires DAT; it does not say audio works without it.
+The docs never state, in either direction, whether a DAT `DeviceSession` must be started for A2DP playback or HFP capture to work. The only sentence linking the two is an ordering constraint explicitly scoped to _"When using HFP with a DAT camera stream."_ It does not say audio requires DAT; it does not say audio works without it.
 
 This is **the highest-value experiment in §8**. If audio works with no session and no registration, then every DAT constraint — preview status, registration flow, permission review, session fragility, even the App Store blocker — **drops out of Cynthia's critical path entirely**, and the glasses become a paired Bluetooth headset that happens to be spectacles. That would be a large simplification. It cannot be assumed.
 
@@ -44,7 +44,7 @@ The PRD's premise is that the founder "should not need to open a phone." Whether
 **iOS — the naive design is not permitted.** Three independent documented blockers:
 
 1. **Silent push is not a dependable trigger.** Apple: the system "doesn't guarantee their delivery," and advises not to "send more than two or three per hour." Background pushes are low-priority, throttled, coalesced, and dropped after force-quit.
-2. **Activating audio from the background is a documented error.** `AVAudioSession.ErrorCode.cannotInterruptOthers` is defined as "An attempt to make a nonmixable audio session active while the app was in the background." Apple documents the audio background mode as *continuation* ("your app's audio continues when people switch to another app") — never as push-initiated start.
+2. **Activating audio from the background is a documented error.** `AVAudioSession.ErrorCode.cannotInterruptOthers` is defined as "An attempt to make a nonmixable audio session active while the app was in the background." Apple documents the audio background mode as _continuation_ ("your app's audio continues when people switch to another app") — never as push-initiated start.
 3. **PushKit/VoIP is closed.** "If you are unable to support CallKit in your app, you cannot use PushKit." Presenting a fake incoming call to obtain background audio is documented misuse and a predictable review rejection.
 
 The one Apple mechanism whose official description matches what this product wants is **PushToTalk** — the only `UIBackgroundModes` value documented as "launches in response to a push notification and plays audible content in the background." But it is scoped to an already-joined channel: the user must have called `requestJoinChannel` first. So the honest iOS shape is **"the founder opts into an availability session, after which prompts arrive hands-free"** — not "works cold with no prior action." Entitlement approval for a non-walkie-talkie app is also unpublished and uncertain.
@@ -79,48 +79,48 @@ Status values: **live** (documented and available to us today) · **pending** (d
 
 None of this is hardware. All of it gates touching a real device, and an adapter that compiles and passes mock tests still cannot run until a human at Meta approves.
 
-| Item | Status | Note |
-| --- | --- | --- |
-| Meta Managed Account + Wearables Developer Center org | pending | Not created. Region availability for the program is undocumented. |
-| Project registration → Application ID + Client Token | pending | iOS and Android must be registered as **separate applications**; one integration cannot span both. |
-| **Permission justification review by Meta** | pending | Documented as existing. **No SLA, turnaround, or rejection criteria published.** If this takes weeks, it dominates the schedule. |
-| Developer Mode (tap Meta AI app version 5×) | pending | Covers the founder's own glasses without review. Adequate for MVP. |
-| Release channels / tester distribution | pending | Invite-only, per-app caps, testers need Meta accounts. |
-| Public distribution — iOS | **unsupported** | App Store rejection (MFi + privacy manifest). No timeline. |
-| Public distribution — Android | pending | **Undocumented.** Do not assume either way. |
+| Item                                                  | Status          | Note                                                                                                                             |
+| ----------------------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Meta Managed Account + Wearables Developer Center org | pending         | Not created. Region availability for the program is undocumented.                                                                |
+| Project registration → Application ID + Client Token  | pending         | iOS and Android must be registered as **separate applications**; one integration cannot span both.                               |
+| **Permission justification review by Meta**           | pending         | Documented as existing. **No SLA, turnaround, or rejection criteria published.** If this takes weeks, it dominates the schedule. |
+| Developer Mode (tap Meta AI app version 5×)           | pending         | Covers the founder's own glasses without review. Adequate for MVP.                                                               |
+| Release channels / tester distribution                | pending         | Invite-only, per-app caps, testers need Meta accounts.                                                                           |
+| Public distribution — iOS                             | **unsupported** | App Store rejection (MFi + privacy manifest). No timeline.                                                                       |
+| Public distribution — Android                         | pending         | **Undocumented.** Do not assume either way.                                                                                      |
 
 ### 2.2 Audio — everything Cynthia actually needs
 
-| Capability | Status | Evidence / caveat |
-| --- | --- | --- |
-| Play spoken prompt to glasses speakers (A2DP) | pending | Documented as standard Bluetooth; 44.1/48 kHz stereo. Unverified on hardware. |
-| Capture founder's spoken reply (HFP mic) | pending | 8 kHz mono, beamformed to isolate the wearer's voice. Adequate for speech recognition; pick an ASR that handles narrowband. |
-| Simultaneous high-quality playback + capture | **unsupported** | Verbatim: activating HFP "switches the glasses away from A2DP, and audio output quality drops to 8 kHz mono for the duration of the session." Every prompt→reply turn pays a route switch. |
-| Route-switch latency | pending | Meta's own sample sleeps `2 * NSEC_PER_SEC` for route stabilization. Budget ~2s per switch; measure for real. |
-| Audio without a DAT session | **UNVERIFIED — decisive** | See §1.2 and experiment E1. |
-| Audio via MockDeviceKit (CI) | **unsupported (probable)** | Mock docs cover only camera services. Means the audio layer is likely hardware-only. |
-| Any DAT audio API | **unsupported** | None exists. Platform APIs only. |
+| Capability                                    | Status                     | Evidence / caveat                                                                                                                                                                          |
+| --------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Play spoken prompt to glasses speakers (A2DP) | pending                    | Documented as standard Bluetooth; 44.1/48 kHz stereo. Unverified on hardware.                                                                                                              |
+| Capture founder's spoken reply (HFP mic)      | pending                    | 8 kHz mono, beamformed to isolate the wearer's voice. Adequate for speech recognition; pick an ASR that handles narrowband.                                                                |
+| Simultaneous high-quality playback + capture  | **unsupported**            | Verbatim: activating HFP "switches the glasses away from A2DP, and audio output quality drops to 8 kHz mono for the duration of the session." Every prompt→reply turn pays a route switch. |
+| Route-switch latency                          | pending                    | Meta's own sample sleeps `2 * NSEC_PER_SEC` for route stabilization. Budget ~2s per switch; measure for real.                                                                              |
+| Audio without a DAT session                   | **UNVERIFIED — decisive**  | See §1.2 and experiment E1.                                                                                                                                                                |
+| Audio via MockDeviceKit (CI)                  | **unsupported (probable)** | Mock docs cover only camera services. Means the audio layer is likely hardware-only.                                                                                                       |
+| Any DAT audio API                             | **unsupported**            | None exists. Platform APIs only.                                                                                                                                                           |
 
 ### 2.3 Interaction model
 
-| Capability | Status | Note |
-| --- | --- | --- |
-| App-initiated spoken prompt | pending | The supported interaction shape. |
-| Custom wake word ("Hey Cynthia") | **unsupported** | Not offered. Meta AI / "Hey Meta" voice commands are explicitly out of the developer preview. |
-| Always-on / ambient listening | **unsupported** | Reply capture must be a short prompted window, never ambient. |
-| Server → glasses push | **unsupported** | DAT is a mobile SDK. **There is no Meta server-side API of any kind.** Everything is phone-mediated. |
-| Hands-free delivery to a backgrounded app | pending (Android) / **unsupported as designed** (iOS) | See §1.3. iOS requires a pre-joined PushToTalk channel or a founder tap. |
-| Cap-touch tap = pause, tap-and-hold = stop | live (documented) | Device-initiated; the app cannot pause/resume programmatically — no such API in 0.8. |
+| Capability                                 | Status                                                | Note                                                                                                 |
+| ------------------------------------------ | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| App-initiated spoken prompt                | pending                                               | The supported interaction shape.                                                                     |
+| Custom wake word ("Hey Cynthia")           | **unsupported**                                       | Not offered. Meta AI / "Hey Meta" voice commands are explicitly out of the developer preview.        |
+| Always-on / ambient listening              | **unsupported**                                       | Reply capture must be a short prompted window, never ambient.                                        |
+| Server → glasses push                      | **unsupported**                                       | DAT is a mobile SDK. **There is no Meta server-side API of any kind.** Everything is phone-mediated. |
+| Hands-free delivery to a backgrounded app  | pending (Android) / **unsupported as designed** (iOS) | See §1.3. iOS requires a pre-joined PushToTalk channel or a founder tap.                             |
+| Cap-touch tap = pause, tap-and-hold = stop | live (documented)                                     | Device-initiated; the app cannot pause/resume programmatically — no such API in 0.8.                 |
 
 ### 2.4 Device state
 
-| Capability | Status | Note |
-| --- | --- | --- |
-| Session state machine (idle→starting→started→paused→stopping→stopped) | pending | CI-testable via MockDeviceKit once access exists. |
-| Battery level read | **unsupported** | No API. Battery surfaces only as terminal error cases. |
-| Wear/donned state read | **unsupported** | No API on real devices (mock-only). Worse: doffing ends the session *only if wear detection is enabled*, and that setting is **not readable** — "doffed with detection off" is indistinguishable from "still worn." |
-| Transition reason on state change | **unsupported** | Docs state explicitly that `DeviceSessionState` carries no reason. |
-| Hinge close → forced stop | live (documented) | Reopening does **not** restart the session; the app must create a new one. Sessions are single-use. |
+| Capability                                                            | Status            | Note                                                                                                                                                                                                                |
+| --------------------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session state machine (idle→starting→started→paused→stopping→stopped) | pending           | CI-testable via MockDeviceKit once access exists.                                                                                                                                                                   |
+| Battery level read                                                    | **unsupported**   | No API. Battery surfaces only as terminal error cases.                                                                                                                                                              |
+| Wear/donned state read                                                | **unsupported**   | No API on real devices (mock-only). Worse: doffing ends the session _only if wear detection is enabled_, and that setting is **not readable** — "doffed with detection off" is indistinguishable from "still worn." |
+| Transition reason on state change                                     | **unsupported**   | Docs state explicitly that `DeviceSessionState` carries no reason.                                                                                                                                                  |
+| Hinge close → forced stop                                             | live (documented) | Reopening does **not** restart the session; the app must create a new one. Sessions are single-use.                                                                                                                 |
 
 ---
 
@@ -132,7 +132,7 @@ Real API names (the `MWDAT*` prefix is the iOS module/Obj-C bridge name, **not**
 - **Session:** `DeviceSession` with `start()`, `stop()`, `state`, `statePublisher`, `errorStream()`.
 - **States:** `idle`, `starting`, `started`, `paused`, `stopping`, `stopped` (Android: SCREAMING_SNAKE_CASE).
 - **Events:** iOS uses a custom `Announcer` protocol plus `AsyncStream` — **not Combine, not delegates**. Android uses `StateFlow`/`SharedFlow` plus a `DatResult<T, E: DatError>` value class.
-- **Sessions are single-use.** After `stopped`, create a new one. `stop()` is fire-and-forget. Create the state stream *before* `start()` or you miss the initial transitions.
+- **Sessions are single-use.** After `stopped`, create a new one. `stop()` is fire-and-forget. Create the state stream _before_ `start()` or you miss the initial transitions.
 - **Errors:** `RegistrationError`, `PermissionError`, `NavigationError`, `DeviceSessionError`, `StreamError`, `DisplayError`. `metaAINotInstalled` appears in three of them, which argues for promoting "Meta AI app not installed" to a first-class adapter error rather than mapping it through per-enum.
 - **Permissions are two-level:** app-level grant plus per-device confirmation. `checkPermissionStatus` can report granted for the app while a newly paired device still needs confirmation. The adapter needs a granted-but-unconfirmed state.
 - **The app never owns the consent UI.** Registration and permission grants happen inside the Meta AI app; our app can only launch the flow and observe a state transition. It needs an explicit "user never came back" outcome.
@@ -141,7 +141,7 @@ Real API names (the `MWDAT*` prefix is the iOS module/Obj-C bridge name, **not**
 
 **Known defects to design around:** the Android SDK crashes intermittently on rapid successive photo captures during streams over one minute (workaround: recycle the session). Not on Cynthia's path today, but it signals preview-stage stability. Also: no dash in the iOS Bundle ID, and glasses need >10% battery to install the companion app.
 
-**A gap that will bite the companion app.** The iOS integration guide's required Info.plist keys are `NSBluetoothAlwaysUsageDescription` and `NSCameraUsageDescription`, plus `UIBackgroundModes` of `bluetooth-peripheral` and `external-accessory`. It **does not mention `NSMicrophoneUsageDescription` at all** — verified directly. Any app that captures HFP mic audio needs that key or iOS terminates it on first access. This is further evidence that Meta does not treat audio as a DAT concern (§1.1), and it means the integration guide is *incomplete* as a checklist for an audio-only integration like ours. Add the key from the start.
+**A gap that will bite the companion app.** The iOS integration guide's required Info.plist keys are `NSBluetoothAlwaysUsageDescription` and `NSCameraUsageDescription`, plus `UIBackgroundModes` of `bluetooth-peripheral` and `external-accessory`. It **does not mention `NSMicrophoneUsageDescription` at all** — verified directly. Any app that captures HFP mic audio needs that key or iOS terminates it on first access. This is further evidence that Meta does not treat audio as a DAT concern (§1.1), and it means the integration guide is _incomplete_ as a checklist for an audio-only integration like ours. Add the key from the start.
 
 ---
 
@@ -177,77 +177,81 @@ The typed package lands in roadmap 4.2; this is the shape it will take.
 /** Transport-agnostic founder-prompting contract. Implemented by the real
  *  companion-app channel, the web inbox, and MetaWearableSimulator alike. */
 
-type EscalationId = string & { readonly __brand: 'EscalationId' }
+type EscalationId = string & { readonly __brand: 'EscalationId' };
 
 /** Where a prompt was presented / a response came from. Recorded on every
  *  event so the audit timeline can show which rung of the ladder answered. */
-type FounderChannel = 'glasses' | 'companion_app' | 'web_inbox' | 'simulator'
+type FounderChannel = 'glasses' | 'companion_app' | 'web_inbox' | 'simulator';
 
-type FounderAction = 'answer' | 'decline' | 'defer' | 'take_call'
+type FounderAction = 'answer' | 'decline' | 'defer' | 'take_call';
 
 interface WearablePrompt {
-  escalationId: EscalationId
-  conversationId: ConversationId
+  escalationId: EscalationId;
+  conversationId: ConversationId;
   /** Read aloud. Kept short — this is spoken into someone's ear mid-day. */
-  spokenText: string
+  spokenText: string;
   /** Same content for channels that render rather than speak. */
-  displayText: string
-  allowedActions: readonly FounderAction[]
-  expiresAt: string   // ISO-8601; authoritative copy lives with the orchestrator
-  traceId: string
+  displayText: string;
+  allowedActions: readonly FounderAction[];
+  expiresAt: string; // ISO-8601; authoritative copy lives with the orchestrator
+  traceId: string;
 }
 
 type UndeliverableReason =
-  | 'device_unavailable'            // glasses disconnected, hinges closed
-  | 'session_unavailable'           // could not establish a session
+  | 'device_unavailable' // glasses disconnected, hinges closed
+  | 'session_unavailable' // could not establish a session
   | 'permission_denied'
   | 'companion_app_unreachable'
-  | 'platform_denied_background_audio'  // the documented iOS case (§1.3)
-  | 'founder_unavailable'           // availability mode says do not disturb
-  | 'timeout'
+  | 'platform_denied_background_audio' // the documented iOS case (§1.3)
+  | 'founder_unavailable' // availability mode says do not disturb
+  | 'timeout';
 
 type DeliveryOutcome =
   | { status: 'presented'; channel: FounderChannel; presentedAt: string }
-  | { status: 'undeliverable'; channel: FounderChannel; reason: UndeliverableReason }
+  | { status: 'undeliverable'; channel: FounderChannel; reason: UndeliverableReason };
 
 /** Emitted only on explicit founder action, except `expired`. */
 type FounderResponseEvent =
-  | { kind: 'answered'; escalationId: EscalationId; channel: FounderChannel
-      text: string
+  | {
+      kind: 'answered';
+      escalationId: EscalationId;
+      channel: FounderChannel;
+      text: string;
       /** 0..1. Low values force the orchestrator to confirm critical details
        *  rather than act on a guess (CLAUDE.md Security). */
-      transcriptionConfidence: number
-      audioRef?: string
-      receivedAt: string }
-  | { kind: 'declined';  escalationId: EscalationId; channel: FounderChannel; receivedAt: string }
-  | { kind: 'deferred';  escalationId: EscalationId; channel: FounderChannel; receivedAt: string }
+      transcriptionConfidence: number;
+      audioRef?: string;
+      receivedAt: string;
+    }
+  | { kind: 'declined'; escalationId: EscalationId; channel: FounderChannel; receivedAt: string }
+  | { kind: 'deferred'; escalationId: EscalationId; channel: FounderChannel; receivedAt: string }
   /** Direct handoff. NEVER inferred — only an explicit affirmative action
    *  produces this, regardless of caller priority (CLAUDE.md invariant). */
   | { kind: 'took_call'; escalationId: EscalationId; channel: FounderChannel; receivedAt: string }
   /** Raised by the ORCHESTRATOR's timer, never by the device. */
-  | { kind: 'expired';   escalationId: EscalationId; expiredAt: string }
+  | { kind: 'expired'; escalationId: EscalationId; expiredAt: string };
 
-type CapabilityStatus = 'live' | 'pending' | 'unsupported'
+type CapabilityStatus = 'live' | 'pending' | 'unsupported';
 
 interface MetaWearableAdapter {
   /** Surfaced in the founder console's integration panel. The UI must never
    *  let a founder believe a pending capability is live (roadmap D.2). */
-  readonly capabilities: Readonly<Record<string, CapabilityStatus>>
+  readonly capabilities: Readonly<Record<string, CapabilityStatus>>;
 
   /** Idempotent on `idempotencyKey`: a retry never prompts the founder twice. */
   deliverPrompt(
     prompt: WearablePrompt,
     opts: { idempotencyKey: string; timeoutMs: number },
-  ): Promise<DeliveryOutcome>
+  ): Promise<DeliveryOutcome>;
 
   /** Client hung up, or another rung already answered. Best-effort. */
-  cancelPrompt(escalationId: EscalationId, reason: string): Promise<void>
+  cancelPrompt(escalationId: EscalationId, reason: string): Promise<void>;
 
   /** Responses for unknown or already-resolved escalation IDs are dropped
    *  with an audit event — never applied to a different conversation. */
-  onFounderResponse(handler: (e: FounderResponseEvent) => void): () => void
+  onFounderResponse(handler: (e: FounderResponseEvent) => void): () => void;
 
-  health(): Promise<{ reachable: boolean; detail?: string }>
+  health(): Promise<{ reachable: boolean; detail?: string }>;
 }
 ```
 
@@ -271,7 +275,7 @@ Split honestly, because the two blockers are different.
 
 1. Whether A2DP playback / HFP capture work **without** a DAT session (§1.2) — and, because the mock has no audio path, this appears untestable in CI even with account access.
 2. Real end-to-end latency: push → wake → TTS → A2DP start; and the A2DP↔HFP route-switch cost.
-3. Whether iOS actually permits activating a **mixable** audio session from a background push handler. Apple documents the error only for the *nonmixable* case; the asymmetry is suggestive but is not affirmative permission.
+3. Whether iOS actually permits activating a **mixable** audio session from a background push handler. Apple documents the error only for the _nonmixable_ case; the asymmetry is suggestive but is not affirmative permission.
 4. Whether the Android FCM → foreground-service → A2DP chain works in practice, and whether FCM deprioritization degrades it over a 7-day window.
 5. Real-world HFP capture quality at 8 kHz in a noisy environment, and resulting ASR accuracy on names, dates, and prices — which directly drives the confidence threshold.
 6. What "certain features are unavailable while your session is active" actually means. Three sources quote the sentence; **none enumerates it.** Whether Meta AI, music, or phone calls are disabled during a session is the largest unresolved UX unknown and is not answerable from documentation.
