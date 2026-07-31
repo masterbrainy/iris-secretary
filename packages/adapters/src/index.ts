@@ -34,3 +34,28 @@ export {
   type RecordedCommand,
   type SimulatorOptions,
 } from './a1mobile/simulator.js';
+
+export {
+  META_WEARABLE_CAPABILITIES,
+  type AdapterHealth,
+  type DeliveryOptions,
+  type DeliveryOutcome,
+  type FounderAction,
+  type FounderChannel,
+  type FounderResponseEvent,
+  type MetaWearableAdapter,
+  type MetaWearableCapability,
+  type UndeliverableReason,
+  type Unsubscribe,
+  type WearablePrompt,
+} from './meta-wearable/contract.js';
+
+export { createMetaWearableProductionAdapter } from './meta-wearable/production.js';
+export {
+  createMetaWearableSimulator,
+  type DeliveredPrompt,
+  type MetaWearableSimulator,
+  type MetaWearableSimulatorOptions,
+  type ResponseRejection,
+  type ResponseResult,
+} from './meta-wearable/simulator.js';
