@@ -83,3 +83,13 @@ export {
   type OperatorAlert,
   type RecoveryPlan,
 } from './recovery.js';
+export {
+  DEFAULT_RETRIEVAL,
+  rankItems,
+  selectAnswer,
+  tokenize,
+  type KnowledgeItem,
+  type RankedItem,
+  type RetrievalConfig,
+  type RetrievalOutcome,
+} from './retrieval.js';
