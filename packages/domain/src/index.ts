@@ -15,3 +15,19 @@ export {
   type TransitionRejection,
   type TransitionResult,
 } from './conversation-state.js';
+export {
+  createEnvelope,
+  decideIngest,
+  deriveIdempotencyKey,
+  deriveSideEffectKey,
+  type DeliveryRecord,
+  type EnvelopeInput,
+  type EnvelopeRejectionReason,
+  type EnvelopeResult,
+  type InboundEventEnvelope,
+  type IngestContext,
+  type IngestDecision,
+  type ProviderId,
+  type RawEventRef,
+  type SideEffectKind,
+} from './inbound-event.js';
