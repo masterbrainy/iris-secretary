@@ -39,7 +39,7 @@ Rules of the road (from CLAUDE.md — repeated here because every item is subjec
 
 ## Phase 4 — Adapters + simulators
 
-- [ ] 4.1 A1MobileAdapter typed contract (from 1.2) + **A1MobileSimulator**: deterministic, emits the same domain events (inbound call, inbound/outbound SMS, transcript segments, hold, transfer, terminate, status callbacks), supports scripted duplicate/out-of-order delivery for tests.
+- [x] 4.1 **A1MobileAdapter typed contract + A1MobileSimulator.** Contract specified against the documented Twilio/Telnyx lifecycle in the async command/webhook shape; **no a1mobile endpoint is asserted anywhere**. All eight capabilities `pending`; the production adapter implements the full contract and refuses every operation with a typed `capability-pending` failure rather than throwing or faking. The simulator does not shortcut the pipeline — it emits signed `RawWebhookDelivery` objects that callers feed through `verifyAndParse`, so verification, envelope construction and dedupe are genuinely exercised. Deterministic clock and counters; scriptable duplicates, out-of-order delivery, and provider outage. 20 tests; **eight guarantees verified by breaking the code**.
 - [ ] 4.2 MetaWearableAdapter typed contract (from 1.1) + **MetaWearableSimulator**: prompt delivery, verbal answer / decline / defer / take-call responses carrying escalation ID, timeout, offline/disconnected mode.
 - [ ] 4.3 Failure-mode harness: each adapter can simulate provider outage; orchestrator must reach safe state, capture callback info, create follow-up, alert founder/operator. (Client never in unexplained silence.)
 
