@@ -59,3 +59,11 @@ export {
   type ResponseRejection,
   type ResponseResult,
 } from './meta-wearable/simulator.js';
+
+export {
+  cancelAcrossLadder,
+  deliverViaLadder,
+  rungIdempotencyKey,
+  type LadderAttempt,
+  type LadderResult,
+} from './delivery-ladder.js';
