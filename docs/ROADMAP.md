@@ -28,6 +28,11 @@ Rules of the road (from CLAUDE.md — repeated here because every item is subjec
 
 ## Phase 3 — Data layer
 
+> **Blocked on Docker (2026-07-31).** `supabase start` needs a container runtime and none is
+> installed (docs/NEEDS-USER.md §4). Rather than stall, phase 4 (adapters + simulators) is being
+> taken first — it depends only on `packages/domain`, so nothing is lost by the reorder. Phase 3
+> resumes as soon as a runtime is available; say the word and colima goes in via Homebrew.
+
 - [ ] 3.1 Supabase local stack (CLI + Docker), migrations for all 14 core tables (organizations, users, contacts, relationships, conversations, messages, escalations, founder_responses, knowledge_items, knowledge_versions, knowledge_proposals, tool_runs, follow_ups, audit_events) with provider event IDs, knowledge source refs, state, scope, sensitivity, idempotency keys, timestamps.
 - [ ] 3.2 RLS on every tenant-owned table via organization_id — no exceptions. RLS tests that prove cross-org reads/writes fail. Service-role usage confined to apps/api server code.
 - [ ] 3.3 Seed data: one org, founder user, contacts (VIP + unknown), approved knowledge items covering the "routine questions" demo set, generated TypeScript types.
