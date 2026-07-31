@@ -102,15 +102,29 @@ Desk research 2026-07-31, adversarially verified. The full spike document (roadm
 
 ### 3.3 The most important open risk
 
-**Background *initiation* is unproven.** Docs and changelogs establish that streams *continue* when the app is backgrounded. Nothing found documents waking a backgrounded or suspended app to *start* audio to the glasses — which is precisely what a server-triggered escalation requires. This is the single biggest unresolved risk in the glasses flow and cannot be settled without hardware plus a Meta developer account.
+**Background *initiation* is unproven, and on iOS it is close to disproven.** Docs and changelogs establish that streams *continue* when the app is backgrounded; nothing documents waking a backgrounded app to *start* audio. Deeper research (spike §1.3) found three independent iOS blockers — silent push is throttled and non-guaranteed, `AVAudioSession.ErrorCode.cannotInterruptOthers` is defined as exactly this failure for nonmixable sessions, and PushKit requires CallKit. Android by contrast has a complete documented path (high-priority FCM → foreground-service background-start exemption → `connectedDevice`/`mediaPlayback` → A2DP).
+
+**Verdict: PENDING on Android, effectively UNSUPPORTED-as-designed on iOS** — iOS hands-free requires a pre-joined PushToTalk channel or a founder tap.
 
 Mitigation, which the PRD already mandates: the founder web inbox and mobile push **always exist as fallbacks**, and the escalation flow requires an explicit delivery confirmation back to the server before it counts a prompt as delivered. If confirmation doesn't arrive, the flow degrades — it never assumes the founder heard anything.
 
-### 3.4 Consequence for the MetaWearableAdapter
+### 3.4 Corrections and additions from the 1.1 spike
 
-- The adapter's server-side contract terminates at the **companion app**, not at the glasses. Its domain events (`promptDelivered`, `founderAnswered`, `founderDeclined`, `founderDeferred`, `founderTookCall`, `promptExpired`, `deviceUnavailable`) are identical whether they originate from real glasses, the companion app UI, the web inbox, or `MetaWearableSimulator`. That is what makes the simulator honest rather than a fake.
-- **INFERENCE, flagged as such:** because glasses audio is ordinary Bluetooth A2DP/HFP through OS routing, a phone app can plausibly play a prompt and capture a reply the same way any Bluetooth-headset app does, *without* a DAT session — DAT being needed for camera, device state and the sanctioned registration model. Meta does not state this. It is a promising de-risking path for the audio-only escalation flow and an explicit item to verify on hardware; it is not something this repo will claim works.
+Full detail in [meta-wearable-spike.md](meta-wearable-spike.md). Load-bearing amendments to §3.1–3.2:
+
+- **DAT exposes no audio API whatsoever** — no `play()`, no `startMicrophone()`, no audio type. Camera, display, and session management only. Meta's guidance is to use `AVAudioPlayer`/`AVSpeechSynthesizer`/`AudioManager`. Since Cynthia's escalation flow is **audio-only**, the glasses leg is a Bluetooth-headset problem, not a Meta-toolkit problem — the risk moves off the preview SDK onto platform audio policy.
+- **Whether audio needs a DAT session at all is undocumented in both directions.** If it doesn't, DAT leaves Cynthia's critical path entirely (spike §7). Decisive experiment E1.
+- **iOS cannot ship publicly at all today**: "Publishing to the App Store is not currently supported… App Store rejection due to Apple's MFi program and privacy manifest requirements." Android Play Store status is **undocumented** — mark unknown, don't assume. This arguably outranks the background question as a launch risk.
+- **The real critical path is access, not hardware**: org registration, per-platform project registration, and a **Meta permission-justification review with no published SLA**. iOS and Android must be registered as separate applications; no dash in the iOS Bundle ID.
+- **MockDeviceKit is substantial** — simulates registration, permissions, pairing, power, don/doff, fold, cap-touch, camera — and runs in CI with no hardware. **But it documents no audio path**, so the one capability Cynthia needs is likely hardware-only.
+- Correction to §3.1: the docs say only "microphones"; the **"5-mic array" is hardware marketing, not a DAT spec**. Also, the FAQ's motion/orientation/GPS answer describes Web Apps on Display glasses, **not** DAT.
+- No battery API, no wear-state read, and no transition reason on state change. Wear detection is a user setting the app **cannot read**, so "doffed" and "still worn" are indistinguishable when it's off.
+
+### 3.5 Consequence for the MetaWearableAdapter
+
+- The adapter's server-side contract terminates at the **companion app**, not at the glasses. Its domain events are identical whether they originate from real glasses, the companion app UI, the web inbox, or `MetaWearableSimulator`. That is what makes the simulator honest rather than a fake. Contract shape frozen in spike §5; typed package lands in roadmap 4.2.
 - The native companion app is **out of scope for the TypeScript monorepo's vertical slice** and blocked anyway (no Meta account, no hardware, no Xcode). The vertical slice therefore proves the contract through the simulator and the web inbox; the glasses leg stays a typed, `pending`, contract-preserved capability.
+- Whoever writes the native code later: the API reference **strips `async`/`throws`** from rendered signatures across all three modules. Sample apps are authoritative; compile against the SDK rather than generating from the reference.
 
 ---
 

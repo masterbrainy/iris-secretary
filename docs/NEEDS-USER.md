@@ -26,13 +26,20 @@ So two questions, and I've kept building either way:
 
 ### 3. Meta developer account + toolkit access + the actual glasses
 
-Needed to verify the device-dependent half of the spike: real latency, whether a backgrounded app can be *woken* to start audio to the glasses (the single biggest unresolved risk — see architecture.md §3.3), mic capture quality, and permission-prompt behaviour. Specifically required:
+Needed to run the six experiments in docs/meta-wearable-spike.md §8 — above all **E1**, which determines whether the toolkit is on Cynthia's critical path at all. Required:
 
-- A **Meta Managed Account** and Wearables Developer Center org/project → an Application ID (developers must be in an AI-glasses-supported country).
+- A **Meta Managed Account** and Wearables Developer Center org, plus **separate iOS and Android project registrations** (one integration cannot span both) → Application ID + Client Token.
 - The **Ray-Ban Meta Wayfarer Gen 2** on Meta AI app **V272+** and firmware **V127+** (DAT 0.8.0's documented requirement).
-- **Xcode** (only Command Line Tools are installed) if we build the iOS companion app; DAT is native iOS/Android only — there is no React Native support and no server SDK.
+- **Xcode** (only Command Line Tools are installed) if we build the iOS companion app; DAT is native iOS/Android only — no React Native, no server SDK.
 
-Without these, the spike is desk-only and the glasses leg stays typed-and-pending behind `MetaWearableSimulator`. Note that even *with* them, public shipping isn't possible yet — the toolkit is Developer Preview and publishing is select-partners-only.
+Note the real critical path is **approval, not hardware**: Meta runs a permission-justification review with **no published SLA, turnaround, or rejection criteria**. If it takes weeks, it dominates the schedule regardless of how the code is going. Worth starting the account application early even though nothing is blocked on it today.
+
+### 3a. Two Meta findings you should see before planning a launch
+
+Both from the 1.1 spike, both product-level rather than technical:
+
+- **iOS cannot ship publicly at all right now.** Meta states publishing a DAT app to the App Store "will lead to App Store rejection due to Apple's MFi program and privacy manifest requirements," with no timeline given. Android Play Store status is simply undocumented. Distribution today is Developer Mode plus invite-only release channels where every tester needs a Meta account. Fine for a founder-only MVP; it caps anything beyond that at "internal pilot."
+- **Hands-free prompting works differently per platform.** The PRD's "the founder should not need to open a phone" holds on Android via a fully documented path. On iOS it does not: silent push is throttled and non-guaranteed, and activating a nonmixable audio session from the background is a documented error. The honest iOS shape is that **the founder opts into an availability session, after which prompts arrive hands-free** — which maps neatly onto the availability mode the PRD already specifies. **Which platform is the founder's phone?** If it's iPhone and cold hands-free delivery is non-negotiable, say so and I'll scope experiment E5 (PushToTalk) rather than assuming the availability-session shape is acceptable.
 
 ### 4. Docker (or another container runtime) — blocks Phase 3 only
 
