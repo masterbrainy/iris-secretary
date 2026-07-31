@@ -1,5 +1,5 @@
 /**
- * The Meta wearable adapter contract — how Cynthia asks the founder a question.
+ * The Meta wearable adapter contract — how Iris asks the founder a question.
  *
  * The server-side contract **terminates at the companion app**, not at the
  * glasses. The Device Access Toolkit is a mobile SDK with no server API and no
@@ -30,7 +30,7 @@ export const META_WEARABLE_CAPABILITIES = {
   'device.sessionState': 'pending',
   /** Meta publishes no server-side API at all. Not a credentials problem. */
   'delivery.serverToGlassesPush': 'unsupported',
-  /** "Hey Cynthia" is not offered by the toolkit and cannot be built. */
+  /** "Hey Iris" is not offered by the toolkit and cannot be built. */
   'interaction.customWakeWord': 'unsupported',
 } as const satisfies CapabilityRegistry;
 

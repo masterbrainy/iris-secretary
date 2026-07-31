@@ -1,4 +1,4 @@
-import { describeCapability, type CapabilityStatus } from '@cynthia/adapters';
+import { describeCapability, type CapabilityStatus } from '@iris/adapters';
 
 /**
  * Placeholder for the founder console (roadmap 6.1). It exists now so the

@@ -4,7 +4,7 @@ Project instructions for Claude Code. Read this before making changes. Full requ
 
 ## Product
 
-Cynthia is a live AI executive secretary. It receives a founder's business calls/texts through a1mobile, answers routine requests from an approved knowledge base and allow-listed tools, and — when it can't safely answer — keeps the client on hold, asks the founder a focused question through the Ray-Ban Meta Wayfarer (Gen 2) glasses, relays the founder's short verbal answer back to the client, and turns that answer into a proposed knowledge entry so the same question doesn't escalate next time.
+Iris is a live AI executive secretary. It receives a founder's business calls/texts through a1mobile, answers routine requests from an approved knowledge base and allow-listed tools, and — when it can't safely answer — keeps the client on hold, asks the founder a focused question through the Ray-Ban Meta Wayfarer (Gen 2) glasses, relays the founder's short verbal answer back to the client, and turns that answer into a proposed knowledge entry so the same question doesn't escalate next time.
 
 Build a working MVP, not mock screens. Where production credentials or documented provider capabilities are unavailable, preserve the integration contract and back it with a deterministic simulator — never fake the feature.
 
@@ -30,8 +30,8 @@ Expensive to change later. Do not violate without raising it first.
 * Idempotency on every inbound provider event. Trace ID plus raw-event reference; a duplicate must never duplicate a message, transfer, booking, or follow-up.
 * Founder timeout produces a deferred response, never a fabricated answer, and creates exactly one follow-up.
 * Direct call handoff requires explicit founder acceptance — never inferred from silence or a generic reply.
-* At most one clarification question before Cynthia must resolve, escalate, or defer.
-* Any dependency failure (a1mobile, the AI service, Supabase Realtime, the glasses integration) returns Cynthia to a safe state, captures callback info, creates a follow-up where possible, and alerts the founder/operator. The client is never left in unexplained silence.
+* At most one clarification question before Iris must resolve, escalate, or defer.
+* Any dependency failure (a1mobile, the AI service, Supabase Realtime, the glasses integration) returns Iris to a safe state, captures callback info, creates a follow-up where possible, and alerts the founder/operator. The client is never left in unexplained silence.
 
 ## Data (Supabase)
 

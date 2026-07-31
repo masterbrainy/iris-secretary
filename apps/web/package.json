@@ -1,5 +1,5 @@
 {
-  "name": "@cynthia/web",
+  "name": "@iris/web",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -7,6 +7,6 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@cynthia/adapters": "workspace:*"
+    "@iris/adapters": "workspace:*"
   }
 }

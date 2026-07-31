@@ -1,4 +1,4 @@
-import { describeCapability, isUsable, type CapabilityRegistry } from '@cynthia/adapters';
+import { describeCapability, isUsable, type CapabilityRegistry } from '@iris/adapters';
 
 /**
  * Provider capability status for this deployment.

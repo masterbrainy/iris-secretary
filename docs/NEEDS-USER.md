@@ -8,7 +8,7 @@ Only blockers Claude cannot clear alone: credentials, accounts, spending, hardwa
 
 **This is the most important item on the page.** Research on 2026-07-31 (adversarially re-verified, details in docs/architecture.md §2) found:
 
-- a1mobile (a1mobile.com; a1mobile.ai redirects there) is a US seed-stage "AI-native carrier" — $11.5M seed led by General Catalyst — selling a business number with an **AI receptionist that "answers, schedules, and follows up"** for $99/mo. That is the same product surface as Cynthia's routine-answer path.
+- a1mobile (a1mobile.com; a1mobile.ai redirects there) is a US seed-stage "AI-native carrier" — $11.5M seed led by General Catalyst — selling a business number with an **AI receptionist that "answers, schedules, and follows up"** for $99/mo. That is the same product surface as Iris's routine-answer path.
 - It publishes **no developer API whatsoever**: no docs site, no developer subdomain, no SDK, no npm package, no OpenAPI spec, zero occurrences of "API" in its Terms of Service, and a four-page sitemap. Its own product is the integration.
 
 So two questions, and I've kept building either way:
@@ -20,13 +20,13 @@ _For the record on where the line is:_ a1mobile does have a live internal API th
 
 ### 2. GitHub remote for PRs
 
-`gh` is authenticated (account: `masterbrainy`) but creating a repo on your account is outward-facing, so I won't do it unilaterally. Tell me the name and visibility (e.g. private `cynthia`) or run `git remote add origin …` yourself. Until then: branch-per-item with local `--no-ff` merges, history kept PR-ready.
+`gh` is authenticated (account: `masterbrainy`) but creating a repo on your account is outward-facing, so I won't do it unilaterally. Tell me the name and visibility (e.g. private `iris`) or run `git remote add origin …` yourself. Until then: branch-per-item with local `--no-ff` merges, history kept PR-ready.
 
 ## Needs credentials/hardware you must provide (all have workarounds in place)
 
 ### 3. Meta developer account + toolkit access + the actual glasses
 
-Needed to run the six experiments in docs/meta-wearable-spike.md §8 — above all **E1**, which determines whether the toolkit is on Cynthia's critical path at all. Required:
+Needed to run the six experiments in docs/meta-wearable-spike.md §8 — above all **E1**, which determines whether the toolkit is on Iris's critical path at all. Required:
 
 - A **Meta Managed Account** and Wearables Developer Center org, plus **separate iOS and Android project registrations** (one integration cannot span both) → Application ID + Client Token.
 - The **Ray-Ban Meta Wayfarer Gen 2** on Meta AI app **V272+** and firmware **V127+** (DAT 0.8.0's documented requirement).

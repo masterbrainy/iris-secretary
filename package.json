@@ -1,9 +1,9 @@
 {
-  "name": "cynthia",
+  "name": "iris",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Cynthia — live AI executive secretary",
+  "description": "Iris — live AI executive secretary",
   "engines": {
     "node": ">=22.13.0"
   },

@@ -15,7 +15,7 @@ import type {
   DeliveryRecord,
   TransitionAuditEvent,
   TransitionRejection,
-} from '@cynthia/domain';
+} from '@iris/domain';
 
 export interface ConversationRecord {
   readonly conversationId: string;

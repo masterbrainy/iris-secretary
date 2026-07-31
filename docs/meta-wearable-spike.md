@@ -29,13 +29,13 @@ The Device Access Toolkit exposes **camera, display, and device-session manageme
 
 Audio to and from the glasses is **ordinary Bluetooth**: A2DP out, HFP bidirectional, driven by `AVAudioSession` on iOS and `AudioManager` on Android.
 
-**Cynthia's escalation flow is audio-only.** It plays a short spoken question and captures a short spoken answer. It needs no camera, no display, no sensors. Therefore **the glasses leg of this product is a Bluetooth-headset problem, not a Meta-toolkit problem** — and the risk moves off Meta's preview-stage SDK and onto iOS/Android background-audio policy, which is far better documented.
+**Iris's escalation flow is audio-only.** It plays a short spoken question and captures a short spoken answer. It needs no camera, no display, no sensors. Therefore **the glasses leg of this product is a Bluetooth-headset problem, not a Meta-toolkit problem** — and the risk moves off Meta's preview-stage SDK and onto iOS/Android background-audio policy, which is far better documented.
 
 ### 1.2 Whether audio needs a DAT session at all is genuinely unknown
 
 The docs never state, in either direction, whether a DAT `DeviceSession` must be started for A2DP playback or HFP capture to work. The only sentence linking the two is an ordering constraint explicitly scoped to _"When using HFP with a DAT camera stream."_ It does not say audio requires DAT; it does not say audio works without it.
 
-This is **the highest-value experiment in §8**. If audio works with no session and no registration, then every DAT constraint — preview status, registration flow, permission review, session fragility, even the App Store blocker — **drops out of Cynthia's critical path entirely**, and the glasses become a paired Bluetooth headset that happens to be spectacles. That would be a large simplification. It cannot be assumed.
+This is **the highest-value experiment in §8**. If audio works with no session and no registration, then every DAT constraint — preview status, registration flow, permission review, session fragility, even the App Store blocker — **drops out of Iris's critical path entirely**, and the glasses become a paired Bluetooth headset that happens to be spectacles. That would be a large simplification. It cannot be assumed.
 
 ### 1.3 Hands-free server-initiated prompting: Android plausible, iOS effectively not
 
@@ -67,7 +67,7 @@ MockDeviceKit runs in CI on plain simulators/emulators with no hardware, and sim
 
 That shrinks the "cannot test without hardware" list dramatically for DAT-shaped work: the entire session state machine, the registration flow, and the permission-denied path are all CI-testable today.
 
-**But the mock documentation describes only `device.services.camera`.** No audio path is mentioned. Since Cynthia's flow is audio-only, the mock likely cannot exercise the one thing this product depends on — which compounds §1.2: the central unknown may not even be answerable in CI.
+**But the mock documentation describes only `device.services.camera`.** No audio path is mentioned. Since Iris's flow is audio-only, the mock likely cannot exercise the one thing this product depends on — which compounds §1.2: the central unknown may not even be answerable in CI.
 
 ---
 
@@ -89,7 +89,7 @@ None of this is hardware. All of it gates touching a real device, and an adapter
 | Public distribution — iOS                             | **unsupported** | App Store rejection (MFi + privacy manifest). No timeline.                                                                       |
 | Public distribution — Android                         | pending         | **Undocumented.** Do not assume either way.                                                                                      |
 
-### 2.2 Audio — everything Cynthia actually needs
+### 2.2 Audio — everything Iris actually needs
 
 | Capability                                    | Status                     | Evidence / caveat                                                                                                                                                                          |
 | --------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -106,7 +106,7 @@ None of this is hardware. All of it gates touching a real device, and an adapter
 | Capability                                 | Status                                                | Note                                                                                                 |
 | ------------------------------------------ | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | App-initiated spoken prompt                | pending                                               | The supported interaction shape.                                                                     |
-| Custom wake word ("Hey Cynthia")           | **unsupported**                                       | Not offered. Meta AI / "Hey Meta" voice commands are explicitly out of the developer preview.        |
+| Custom wake word ("Hey Iris")              | **unsupported**                                       | Not offered. Meta AI / "Hey Meta" voice commands are explicitly out of the developer preview.        |
 | Always-on / ambient listening              | **unsupported**                                       | Reply capture must be a short prompted window, never ambient.                                        |
 | Server → glasses push                      | **unsupported**                                       | DAT is a mobile SDK. **There is no Meta server-side API of any kind.** Everything is phone-mediated. |
 | Hands-free delivery to a backgrounded app  | pending (Android) / **unsupported as designed** (iOS) | See §1.3. iOS requires a pre-joined PushToTalk channel or a founder tap.                             |
@@ -139,15 +139,15 @@ Real API names (the `MWDAT*` prefix is the iOS module/Obj-C bridge name, **not**
 
 **Caution for whoever writes the native code:** the API reference's rendered signature blocks **strip `async` and `throws`** — confirmed across three modules. The sample apps are authoritative for effect signatures. Do not generate an interface from the reference pages; compile against the SDK.
 
-**Known defects to design around:** the Android SDK crashes intermittently on rapid successive photo captures during streams over one minute (workaround: recycle the session). Not on Cynthia's path today, but it signals preview-stage stability. Also: no dash in the iOS Bundle ID, and glasses need >10% battery to install the companion app.
+**Known defects to design around:** the Android SDK crashes intermittently on rapid successive photo captures during streams over one minute (workaround: recycle the session). Not on Iris's path today, but it signals preview-stage stability. Also: no dash in the iOS Bundle ID, and glasses need >10% battery to install the companion app.
 
 **A gap that will bite the companion app.** The iOS integration guide's required Info.plist keys are `NSBluetoothAlwaysUsageDescription` and `NSCameraUsageDescription`, plus `UIBackgroundModes` of `bluetooth-peripheral` and `external-accessory`. It **does not mention `NSMicrophoneUsageDescription` at all** — verified directly. Any app that captures HFP mic audio needs that key or iOS terminates it on first access. This is further evidence that Meta does not treat audio as a DAT concern (§1.1), and it means the integration guide is _incomplete_ as a checklist for an audio-only integration like ours. Add the key from the start.
 
 ---
 
-## 4. What this means for Cynthia's escalation flow
+## 4. What this means for Iris's escalation flow
 
-The PRD's flow — Cynthia holds the client, asks the founder through the glasses, relays the answer — survives, with one honest amendment to the "founder should not need to open a phone" promise:
+The PRD's flow — Iris holds the client, asks the founder through the glasses, relays the answer — survives, with one honest amendment to the "founder should not need to open a phone" promise:
 
 - **On Android**, hands-free is plausible via the documented FCM → foreground-service → A2DP chain.
 - **On iOS**, hands-free requires the founder to have opted into an availability session first (PushToTalk), or degrades to a notification the founder taps. This is not a workaround to hide — it is the honest shape, and it maps cleanly onto the PRD's **availability mode** in the founder console. "Available" can mean "channel joined, prompts arrive hands-free."
@@ -285,7 +285,7 @@ Split honestly, because the two blockers are different.
 
 ## 7. Do we even need DAT for the MVP?
 
-Stated plainly, because it may save a lot of work: **if E1 below shows audio works without a DAT session, Cynthia's MVP does not need the Device Access Toolkit.** The flow would be a companion app that receives a push, speaks over A2DP, captures over HFP, and posts the result back — with the glasses acting as a paired Bluetooth headset.
+Stated plainly, because it may save a lot of work: **if E1 below shows audio works without a DAT session, Iris's MVP does not need the Device Access Toolkit.** The flow would be a companion app that receives a push, speaks over A2DP, captures over HFP, and posts the result back — with the glasses acting as a paired Bluetooth headset.
 
 DAT would then be worth adding later for polish: sanctioned registration, device/session state, wear detection, and the App Connections entry that lets a founder see and revoke the integration.
 

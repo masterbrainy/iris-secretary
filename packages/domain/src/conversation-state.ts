@@ -28,7 +28,7 @@ export type ConversationState =
 export type ConversationEventType =
   /** The provider reports the inbound call was answered. */
   | 'CALL_ANSWERED'
-  /** Cynthia asks its single permitted clarification question. */
+  /** Iris asks its single permitted clarification question. */
   | 'CLARIFICATION_ASKED'
   /** The caller answered the clarification. */
   | 'CLARIFICATION_RECEIVED'
@@ -36,7 +36,7 @@ export type ConversationEventType =
   | 'RESOLUTION_STARTED'
   /** An approved, in-scope, confident answer was given directly. */
   | 'ANSWER_DELIVERED'
-  /** Cynthia cannot safely answer and must ask the founder. */
+  /** Iris cannot safely answer and must ask the founder. */
   | 'ESCALATION_REQUIRED'
   /** A prompt reached the founder and was positively acknowledged. */
   | 'FOUNDER_PROMPT_DELIVERED'
@@ -54,7 +54,7 @@ export type ConversationEventType =
   | 'RELAY_COMPLETED'
   /** The transfer to the founder completed. */
   | 'HANDOFF_COMPLETED'
-  /** The transfer failed; Cynthia takes the client back. */
+  /** The transfer failed; Iris takes the client back. */
   | 'HANDOFF_FAILED'
   /** The caller hung up. */
   | 'CALLER_HUNG_UP'
@@ -177,7 +177,7 @@ export const ALL_EVENTS: ConversationEventType[] = [
  */
 export interface ConversationContext {
   /**
-   * CLAUDE.md permits at most one clarification question before Cynthia must
+   * CLAUDE.md permits at most one clarification question before Iris must
    * resolve, escalate, or defer. Counting is the machine's job because it is a
    * reachability property, not a matter of reviewer discipline.
    */
@@ -268,7 +268,7 @@ export function transition(input: TransitionInput): TransitionResult {
       rejection: {
         reason: 'clarification-limit',
         message:
-          'Only one clarification question is permitted; Cynthia must now resolve, escalate, or defer.',
+          'Only one clarification question is permitted; Iris must now resolve, escalate, or defer.',
       },
     };
   }

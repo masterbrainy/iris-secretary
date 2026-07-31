@@ -10,7 +10,7 @@
  * ids come from a counter.
  */
 
-import type { DeliveryRecord } from '@cynthia/domain';
+import type { DeliveryRecord } from '@iris/domain';
 import type {
   AuditRecord,
   AuditSink,

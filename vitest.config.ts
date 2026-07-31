@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 // Resolve workspace packages to their TypeScript source during tests, so a test
 // run never depends on a prior build. Plain `node` still gets dist/ via the
 // default export condition.
-const sourceCondition = ['cynthia:source'];
+const sourceCondition = ['iris:source'];
 
 export default defineConfig({
   resolve: { conditions: sourceCondition },

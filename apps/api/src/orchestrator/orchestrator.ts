@@ -26,14 +26,14 @@ import {
   type ConversationEventType,
   type ConversationState,
   type InboundEventEnvelope,
-} from '@cynthia/domain';
+} from '@iris/domain';
 import type {
   A1MobileAdapter,
   A1MobilePayload,
   DeliveryContext,
   RawWebhookDelivery,
-} from '@cynthia/adapters';
-import { INITIAL_CONTEXT } from '@cynthia/domain';
+} from '@iris/adapters';
+import { INITIAL_CONTEXT } from '@iris/domain';
 import type { ConversationRecord, OrchestratorPorts } from './ports.js';
 
 export type IngestOutcome =

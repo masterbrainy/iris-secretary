@@ -12,7 +12,7 @@
  *  - Customer-specific knowledge never leaks to a different caller.
  *
  * Every gate returns readable reasons alongside its decision, because the
- * founder console has to show *why* Cynthia did what it did, and an audit
+ * founder console has to show *why* Iris did what it did, and an audit
  * timeline of bare booleans is not an explanation.
  *
  * Pure: classification of natural language (is this a refund request?) is an
@@ -109,7 +109,7 @@ export function isUsableForCaller(candidate: KnowledgeCandidate, caller: CallerI
 }
 
 export interface PolicyConfig {
-  /** Below this, Cynthia must not answer directly. */
+  /** Below this, Iris must not answer directly. */
   readonly minAnswerConfidence: number;
   /**
    * Below this, a critical detail (name, date, price, commitment) must be
@@ -237,7 +237,7 @@ export function canAskClarification(clarificationCount: number): GateResult {
     return {
       allowed: false,
       reason:
-        'One clarification question has already been asked; Cynthia must now resolve, escalate, or defer.',
+        'One clarification question has already been asked; Iris must now resolve, escalate, or defer.',
     };
   }
   return { allowed: true };
